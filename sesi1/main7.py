@@ -51,20 +51,20 @@ daftar_hewan = {
 
 # Menu Pemilihan Hewan
 print("\n" + "=" * 40)
-print("PILIH KARAKTER HEWAN YANG INGIN DITEBAK:")
+print("Choose Your Fighter :")
 print("=" * 40)
 for nomor, data in daftar_hewan.items():
     print(f"[{nomor}] {data['nama']} {data['icon']}")
 
 while True:
-    pilihan = input("\nmasukkan nomor hewan pilihanmu (1-3): ").strip()
+    pilihan = input("\npilih jagoan nomer berapa? (1-3): ").strip()
     try:
         nomor_pilihan = int(pilihan)
         if nomor_pilihan in daftar_hewan:
             hewan_terpilih = daftar_hewan[nomor_pilihan]
             break
         else:
-            print("pilihan gak ada cok, pilih 1, 2, atau 3!")
+            print("pilihannya gak ada cok, pilih 1, 2, atau 3 aja!")
     except ValueError:
         print("input harus angka 1-3 woi!")
 
@@ -72,8 +72,8 @@ nama_hewan = hewan_terpilih["nama"]
 icon_hewan = hewan_terpilih["icon"]
 
 putar_suara("buka")
-print(f"\n🎉 Keren! Kamu memilih {nama_hewan} [{icon_hewan}]!")
-input("\n👉 Tekan Enter untuk mulai bermain...")
+print(f"\n🎉 Anjaaay! Kamu milih {nama_hewan} [{icon_hewan}]!")
+input("\n👉 Tekan Enter untuk mulai yak...")
 
 # Inisialisasi Sistem Nyawa
 nyawa_maksimal = 3
@@ -103,7 +103,7 @@ while True:
     # Validasi input (angka 1-4, anti-crash, dan opsi 'exit')
     keluar = False
     while True:
-        tebakan = input("\nada di 1/2/3/4 (atau ketik 'exit' untuk keluar) ?  ").strip()
+        tebakan = input("\nada di 1/2/3/4 (atau exit) ?  ").strip()
         
         # Fitur keluar game dengan string 'exit'
         if tebakan.lower() == 'exit':
@@ -116,13 +116,13 @@ while True:
             option_user = 0
             
         if option_user == 0:
-            print("\ngoblok, pake angka inputannya woi!")
+            print("\nwoo goblok, inputannya pake angka woi!")
             continue
         break
 
     # Jika pemain memilih 'exit', hentikan game
     if keluar:
-        print(f"\nkamu memilih keluar. Terima kasih sudah bermain, {nama_user}! Sisa nyawamu: {nyawa}\n")
+        print(f"\nkamu milih keluar. Terima kasih sudah bermain, {nama_user}! Sisa nyawamu: {nyawa}\n")
         break
 
     print(f"\nkamu nebak {option_user}\n")
@@ -134,11 +134,11 @@ while True:
     # Pengecekan tebakan & logika nyawa
     if option_user == posisi_hewan:
         putar_suara("benar")
-        print(f"dan benar, tebakan kamu adalah {option_user} !\n")
+        print(f"naah bener, tebakanmu adalah {option_user} !\n")
         
         if nyawa < nyawa_maksimal:
             nyawa += 1
-            print(f"🎉 Mantap! Nyawamu bertambah 1! (Sekarang: {nyawa}/{nyawa_maksimal})")
+            print(f"🎉 Ntap! Nyawamu bertambah 1! (Sekarang: {nyawa}/{nyawa_maksimal})")
         else:
             print("✨ Nyawamu masih penuh (3/3)!")
             
@@ -146,7 +146,7 @@ while True:
         putar_suara("salah")
         if 1 <= option_user <= 4:
             kotak[option_user - 1] = "[❌]"
-        print(f"haha salah cok, masak {option_user} !\n")
+        print(f"wkwkwk salah cok, masak {option_user} !\n")
         
         nyawa -= 1
 
@@ -160,9 +160,9 @@ while True:
     # Cek jika nyawa habis (mati)
     if nyawa <= 0:
         putar_suara("game_over")
-        print(f"\n💀 GAME OVER! Nyawamu habis cok, si {nama_hewan.lower()} kabur!\n")
+        print(f"\n💀 GAME OVER! Nyawamu abis bro, si {nama_hewan.lower()} keburu kabur!\n")
         break
 
     # Jeda agar pemain bisa melihat hasil ronde sebelum layar dibersihkan
     ronde += 1
-    input("\n👉 Tekan Enter untuk lanjut ke ronde berikutnya...")
+    input("\n👉 Klik Enter untuk lanjut ke ronde berikutnya...")
