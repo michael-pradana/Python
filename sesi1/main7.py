@@ -1,9 +1,16 @@
+import os
 import random
 import sys
 
 # Memastikan terminal Windows mendukung karakter emoji UTF-8 tanpa error
 sys.stdout.reconfigure(encoding='utf-8')
 
+def bersihkan_layar():
+    """Membersihkan tampilan terminal agar tidak menumpuk/scrolling."""
+    os.system('cls' if os.name == 'nt' else 'clear')
+
+# Tampilan awal game
+bersihkan_layar()
 welcome_message = "main game yuk!"
 print(welcome_message)
 
@@ -40,17 +47,22 @@ nama_hewan = hewan_terpilih["nama"]
 icon_hewan = hewan_terpilih["icon"]
 
 print(f"\n🎉 Keren! Kamu memilih {nama_hewan} [{icon_hewan}]!")
+input("\n👉 Tekan Enter untuk mulai bermain...")
 
 # Inisialisasi Sistem Nyawa
 nyawa_maksimal = 3
 nyawa = nyawa_maksimal
+ronde = 1
 
 while True:
+    # Bersihkan layar setiap kali ronde baru dimulai
+    bersihkan_layar()
     posisi_hewan = random.randint(1, 4)
 
-    # Tampilan Info Pemain, Target Hewan & Sisa Nyawa
+    # Tampilan Info Pemain, Target Hewan & Sisa Nyawa Terbaru
     tampilan_nyawa = "❤️ " * nyawa
-    print("\n" + "=" * 40)
+    print("=" * 40)
+    print(f"Ronde  : {ronde}")
     print(f"Pemain : {nama_user}")
     print(f"Target : {nama_hewan} {icon_hewan}")
     print(f"Nyawa  : {tampilan_nyawa} ({nyawa}/{nyawa_maksimal})")
@@ -121,3 +133,7 @@ while True:
     if nyawa <= 0:
         print(f"\n💀 GAME OVER! Nyawamu habis cok, si {nama_hewan.lower()} kabur!\n")
         break
+
+    # Jeda agar pemain bisa melihat hasil ronde sebelum layar dibersihkan
+    ronde += 1
+    input("\n👉 Tekan Enter untuk lanjut ke ronde berikutnya...")
