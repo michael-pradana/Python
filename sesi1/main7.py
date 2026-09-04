@@ -1,5 +1,6 @@
 import os
 import random
+import subprocess
 import sys
 
 # Memastikan terminal Windows mendukung karakter emoji UTF-8 tanpa error
@@ -8,6 +9,30 @@ sys.stdout.reconfigure(encoding='utf-8')
 def bersihkan_layar():
     """Membersihkan tampilan terminal agar tidak menumpuk/scrolling."""
     os.system('cls' if os.name == 'nt' else 'clear')
+
+def putar_suara(tipe):
+    """Memutar efek suara sistem secara asinkron (non-blocking) di latar belakang."""
+    if sys.platform == "darwin":  # Khusus macOS
+        suara_map = {
+            "benar": "/System/Library/Sounds/Glass.aiff",
+            "salah": "/System/Library/Sounds/Basso.aiff",
+            "buka": "/System/Library/Sounds/Pop.aiff",
+            "game_over": "/System/Library/Sounds/Sosumi.aiff"
+        }
+        file_suara = suara_map.get(tipe)
+        if file_suara and os.path.exists(file_suara):
+            subprocess.Popen(["afplay", file_suara], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    elif sys.platform == "win32":  # Fallback untuk sistem Windows
+        try:
+            import winsound
+            if tipe == "benar":
+                winsound.Beep(1000, 150)
+            elif tipe == "salah":
+                winsound.Beep(400, 250)
+            elif tipe == "game_over":
+                winsound.Beep(300, 500)
+        except Exception:
+            pass
 
 # Tampilan awal game
 bersihkan_layar()
@@ -46,6 +71,7 @@ while True:
 nama_hewan = hewan_terpilih["nama"]
 icon_hewan = hewan_terpilih["icon"]
 
+putar_suara("buka")
 print(f"\n🎉 Keren! Kamu memilih {nama_hewan} [{icon_hewan}]!")
 input("\n👉 Tekan Enter untuk mulai bermain...")
 
@@ -107,6 +133,7 @@ while True:
 
     # Pengecekan tebakan & logika nyawa
     if option_user == posisi_hewan:
+        putar_suara("benar")
         print(f"dan benar, tebakan kamu adalah {option_user} !\n")
         
         if nyawa < nyawa_maksimal:
@@ -116,6 +143,7 @@ while True:
             print("✨ Nyawamu masih penuh (3/3)!")
             
     else:
+        putar_suara("salah")
         if 1 <= option_user <= 4:
             kotak[option_user - 1] = "[❌]"
         print(f"haha salah cok, masak {option_user} !\n")
@@ -131,6 +159,7 @@ while True:
 
     # Cek jika nyawa habis (mati)
     if nyawa <= 0:
+        putar_suara("game_over")
         print(f"\n💀 GAME OVER! Nyawamu habis cok, si {nama_hewan.lower()} kabur!\n")
         break
 
