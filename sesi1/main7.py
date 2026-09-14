@@ -39,7 +39,7 @@ bersihkan_layar()
 welcome_message = "main game yuk!"
 print(welcome_message)
 
-nama_user = input("masukkan namamu : ").strip()
+nama_user = input("masukin namamu : ").strip()
 print(f"\nhalo {nama_user}!")
 
 # Data pilihan karakter hewan & icon
@@ -51,13 +51,13 @@ daftar_hewan = {
 
 # Menu Pemilihan Hewan
 print("\n" + "=" * 40)
-print("Choose Your Fighter :")
+print("Choose Your Fighter !")
 print("=" * 40)
 for nomor, data in daftar_hewan.items():
     print(f"[{nomor}] {data['nama']} {data['icon']}")
 
 while True:
-    pilihan = input("\npilih jagoan nomer berapa? (1-3): ").strip()
+    pilihan = input("\n kamu pilih jagoan nomer berapa? (1-3): ").strip()
     try:
         nomor_pilihan = int(pilihan)
         if nomor_pilihan in daftar_hewan:
@@ -66,13 +66,13 @@ while True:
         else:
             print("pilihannya gak ada cok, pilih 1, 2, atau 3 aja!")
     except ValueError:
-        print("input harus angka 1-3 woi!")
+        print("input harus angka 1-3 woii!")
 
 nama_hewan = hewan_terpilih["nama"]
 icon_hewan = hewan_terpilih["icon"]
 
 putar_suara("buka")
-print(f"\n🎉 Anjaaay! Kamu milih {nama_hewan} [{icon_hewan}]!")
+print(f"\n🎉 Anjaaay! pilihannmu {nama_hewan} [{icon_hewan}] , keren!!")
 input("\n👉 Tekan Enter untuk mulai yak...")
 
 # Inisialisasi Sistem Nyawa
@@ -116,13 +116,13 @@ while True:
             option_user = 0
             
         if option_user == 0:
-            print("\nwoo goblok, inputannya pake angka woi!")
+            print("\nwoo goblok, inputannya pake angka aja coy!!")
             continue
         break
 
     # Jika pemain memilih 'exit', hentikan game
     if keluar:
-        print(f"\nkamu milih keluar. Terima kasih sudah bermain, {nama_user}! Sisa nyawamu: {nyawa}\n")
+        print(f"\nkamu milih cabut, thankyou udah main, {nama_user}! Sisa nyawamu: {nyawa}\n")
         break
 
     print(f"\nkamu nebak {option_user}\n")
@@ -134,11 +134,11 @@ while True:
     # Pengecekan tebakan & logika nyawa
     if option_user == posisi_hewan:
         putar_suara("benar")
-        print(f"naah bener, tebakanmu adalah {option_user} !\n")
+        print(f"naah bener!! tebakanmu adalah {option_user} !\n")
         
         if nyawa < nyawa_maksimal:
             nyawa += 1
-            print(f"🎉 Ntap! Nyawamu bertambah 1! (Sekarang: {nyawa}/{nyawa_maksimal})")
+            print(f"🎉 Ntap! Nyawamu bertambah 1! (Sekarang jadi: {nyawa}/{nyawa_maksimal})")
         else:
             print("✨ Nyawamu masih penuh (3/3)!")
             
@@ -165,4 +165,4 @@ while True:
 
     # Jeda agar pemain bisa melihat hasil ronde sebelum layar dibersihkan
     ronde += 1
-    input("\n👉 Klik Enter untuk lanjut ke ronde berikutnya...")
+    input("\n👉 Klik Enter buat lanjut ke next round..")
