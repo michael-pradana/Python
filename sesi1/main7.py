@@ -1,3 +1,4 @@
+import json
 import os
 import random
 import subprocess
@@ -5,6 +6,26 @@ import sys
 
 # Memastikan terminal Windows mendukung karakter emoji UTF-8 tanpa error
 sys.stdout.reconfigure(encoding='utf-8')
+
+FILE_HIGHSCORE = os.path.join(os.path.dirname(__file__), "highscore.json")
+
+def muat_highscore():
+    """Membaca data rekor skor tertinggi dari file json."""
+    if os.path.exists(FILE_HIGHSCORE):
+        try:
+            with open(FILE_HIGHSCORE, "r", encoding="utf-8") as f:
+                return json.load(f)
+        except Exception:
+            pass
+    return {"nama": "-", "skor": 0}
+
+def simpan_highscore(nama, skor):
+    """Menyimpan data rekor skor tertinggi baru ke file json."""
+    try:
+        with open(FILE_HIGHSCORE, "w", encoding="utf-8") as f:
+            json.dump({"nama": nama, "skor": skor}, f, indent=2)
+    except Exception as e:
+        print(f"Gagal menyimpan high score: {e}")
 
 def bersihkan_layar():
     """Membersihkan tampilan terminal agar tidak menumpuk/scrolling."""
@@ -75,10 +96,13 @@ putar_suara("buka")
 print(f"\n🎉 Anjaaay! pilihannmu {nama_hewan} [{icon_hewan}] , keren!!")
 input("\n👉 Tekan Enter untuk mulai yak...")
 
-# Inisialisasi Sistem Nyawa
+# Inisialisasi Sistem Nyawa & Skor
 nyawa_maksimal = 3
 nyawa = nyawa_maksimal
 ronde = 1
+skor = 0
+combo = 0
+rekor_data = muat_highscore()
 
 while True:
     # Bersihkan layar setiap kali ronde baru dimulai
@@ -87,12 +111,13 @@ while True:
 
     # Tampilan Info Pemain, Target Hewan & Sisa Nyawa Terbaru
     tampilan_nyawa = "❤️ " * nyawa
-    print("=" * 40)
-    print(f"Ronde  : {ronde}")
-    print(f"Pemain : {nama_user}")
+    info_combo = f" (🔥 x{combo})" if combo > 1 else ""
+    print("=" * 46)
+    print(f"Ronde  : {ronde:<3} | Skor : {skor} Pts{info_combo}")
+    print(f"Pemain : {nama_user:<8} | Juara: {rekor_data['nama']} ({rekor_data['skor']} Pts 👑)")
     print(f"Target : {nama_hewan} {icon_hewan}")
     print(f"Nyawa  : {tampilan_nyawa} ({nyawa}/{nyawa_maksimal})")
-    print("=" * 40)
+    print("=" * 46)
 
     # Tampilan Awal Sebelum Menebak
     print(f'''dimana si {nama_hewan.lower()} {icon_hewan}?
@@ -122,7 +147,7 @@ while True:
 
     # Jika pemain memilih 'exit', hentikan game
     if keluar:
-        print(f"\nkamu milih cabut, thankyou udah main, {nama_user}! Sisa nyawamu: {nyawa}\n")
+        print(f"\nkamu milih cabut, thankyou udah main, {nama_user}! Sisa nyawamu: {nyawa}")
         break
 
     print(f"\nkamu nebak {option_user}\n")
@@ -133,17 +158,29 @@ while True:
 
     # Pengecekan tebakan & logika nyawa
     if option_user == posisi_hewan:
+        combo += 1
+        poin_dapat = 100 * combo
+        skor += poin_dapat
         putar_suara("benar")
         print(f"naah bener!! tebakanmu adalah {option_user} !\n")
         
+        if combo > 1:
+            print(f"🔥 COMBO x{combo}! Nambah bonus +{poin_dapat} Poin! (Total Skor: {skor})")
+        else:
+            print(f"🎉 Ntap! Dapet +{poin_dapat} Poin! (Total Skor: {skor})")
+
         if nyawa < nyawa_maksimal:
             nyawa += 1
-            print(f"🎉 Ntap! Nyawamu bertambah 1! (Sekarang jadi: {nyawa}/{nyawa_maksimal})")
+            print(f"💖 Nyawamu bertambah 1! (Sekarang jadi: {nyawa}/{nyawa_maksimal})")
         else:
             print("✨ Nyawamu masih penuh (3/3)!")
             
     else:
         putar_suara("salah")
+        if combo > 1:
+            print(f"💔 Yah, streak combo x{combo} kamu putus cok!")
+        combo = 0
+
         if 1 <= option_user <= 4:
             kotak[option_user - 1] = "[❌]"
         print(f"wkwkwk salah cok, masak {option_user} !\n")
@@ -166,3 +203,21 @@ while True:
     # Jeda agar pemain bisa melihat hasil ronde sebelum layar dibersihkan
     ronde += 1
     input("\n👉 Klik Enter buat lanjut ke next round..")
+
+# Tampilan Ringkasan Akhir Permainan
+print("\n" + "=" * 46)
+print("📊 RINGKASAN PERMAINAN")
+print("=" * 46)
+print(f"Pemain      : {nama_user}")
+print(f"Total Ronde : {ronde} ronde")
+print(f"Skor Akhir  : {skor} Pts")
+print("=" * 46)
+
+# Cek & Simpan Rekor Baru
+if skor > rekor_data["skor"]:
+    simpan_highscore(nama_user, skor)
+    putar_suara("benar")
+    print(f"👑 ANJAAAY! REKOR BARU TERCIPTA!")
+    print(f"Selamat {nama_user}, kamu resmi jadi Juara Baru ngalahin rekor sebelumnya ({rekor_data['skor']} Pts)!\n")
+else:
+    print(f"Rekor tertinggi masih dipegang {rekor_data['nama']} ({rekor_data['skor']} Pts). Ayo coba lagi nanti biar menang!\n")
